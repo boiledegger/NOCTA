@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NÒCTA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: Helvetica, sans-serif;
+            background-image: url("wispy_bg.png");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        /* Header */
+        .header {
+            min-height: 75px;
+            background-color: black;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 0 50px;
+            flex-wrap: wrap;
+        }
+
+        .search {
+            width: 100%;
+            height: 35px;
+            border-radius: 5px;
+            border: none;
+            padding: 0 15px;
+            box-sizing: border-box;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .logo {
+            font-size: 28px;
+            letter-spacing: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .right {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .right a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .cart-icon {
+            font-size: 25px;
+        }
+
+        .profile-icon {
+            border: 2px solid white;
+            border-radius: 50%;
+            padding: 8px;
+            font-size: 20px;
+        }
+
+        /* Navigation */
+        .nav {
+            min-height: 40px;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 100px;
+            border-bottom: 1px solid #aaa;
+            flex-wrap: wrap;
+        }
+
+        .nav a {
+            color: black;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Home */
+        .main {
+            height: calc(100vh - 115px);
+        }
+
+        /* Sign up */
+        .signup {
+            width: 350px;
+            max-width: 90%;
+            margin: 80px auto;
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: black;
+            color: white;
+            border: none;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #333333;
+        }
+
+        .back {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back a {
+            color: black;
+        }
+
+        /* Cart */
+        .cart {
+            width: 600px;
+            max-width: 90%;
+            margin: 60px auto;
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        .product {
+            border-bottom: 1px solid #ccc;
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .product button {
+            width: auto;
+            margin-top: 0;
+        }
+
+        /* Profile */
+        .profile {
+            width: 400px;
+            max-width: 90%;
+            margin: 70px auto;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.85);
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .icon {
+            font-size: 70px;
+        }
+
+        .profile p {
+            font-size: 18px;
+            overflow-wrap: anywhere;
+        }
+
+        .profile .back {
+            margin-top: 30px;
+        }
+
+        /* Categories */
+        .content {
+            padding: 50px;
+            text-align: center;
+        }
+
+        .content h1 {
+            font-size: 32px;
+            letter-spacing: 3px;
+        }
+
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .category {
+            width: 200px;
+            min-height: 180px;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #ccc;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .category h3 {
+            overflow-wrap: anywhere;
+        }
+
+        .category p {
+            font-size: 18px;
+        }
+
+        .category:hover {
+            background-color: #dddddd;
+        }
+
+        .category button {
+            font-size: 12px;
+        }
+
+        #noProducts {
+            margin-top: 25px;
+        }
+
+        /* About */
+        .about {
+            width: 700px;
+            max-width: 80%;
+            margin: 70px auto;
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 40px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .about h1 {
+            font-size: 32px;
+            letter-spacing: 3px;
+        }
+
+        .about p {
+            font-size: 17px;
+            line-height: 1.7;
+            text-align: justify;
+        }
+
+        .mission {
+            margin-top: 30px;
+        }
+
+        /* Contact */
+        .contact {
+            width: 700px;
+            max-width: 80%;
+            margin: 60px auto;
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        .contact h1 {
+            text-align: center;
+            letter-spacing: 3px;
+        }
+
+        .contact-info {
+            margin-top: 30px;
+        }
+
+        .contact-info p {
+            font-size: 17px;
+            margin: 20px 0;
+        }
+
+        .form {
+            margin-top: 30px;
+        }
+
+        .form input,
+        .form textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 1px solid #aaa;
+        }
+
+        .form textarea {
+            height: 120px;
+        }
+
+        #signupMessage,
+        #contactResult {
+            text-align: center;
+            overflow-wrap: anywhere;
+        }
+
+        @media (max-width: 800px) {
+            .header {
+                padding: 15px 20px;
+                justify-content: center;
+            }
+
+            .nav {
+                gap: 20px;
+                padding: 10px;
+            }
+
+            .content {
+                padding: 25px 10px;
+            }
+
+            .about,
+            .contact {
+                max-width: 95%;
+                padding: 25px;
+            }
+        }
+            .search-container {
+                position: relative;
+                width: 300px;
+                max-width: 100%;
+                transition: width 0.3s ease;
+            }
+
+            .search-container:hover,
+            .search-container:focus-within {
+                width: 380px;
+            }
+            
+            .search-container:hover .search,
+            .search-container:focus-within .search {
+                box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+            }
+
+            .search-dropdown {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: white;
+                color: black;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+            }
+
+            .search-option {
+                padding: 12px;
+                cursor: pointer;
+                border-bottom: 1px solid #eee;
+            }
+
+            .search-option:hover {
+                background-color: #dddddd;
+            }
+
+            .search-empty {
+                padding: 12px;
+                color: #666;
+            }
+        /* Home hero */
+        .main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 20px;
+            color: #1b1f23;
+        }
+
+        .hero-title {
+            margin: 0;
+            padding: 10px 60px;
+            font-size: 110px;
+            font-weight: 300;
+            letter-spacing: 8px;
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .hero-tagline {
+            margin: 30px 0;
+            font-size: 18px;
+            letter-spacing: 4px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .hero-btn {
+            padding: 18px 40px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-decoration: none;
+            border: 2px solid black;
+        }
+
+        .hero-btn-dark {
+            background-color: black;
+            color: white;
+        }
+
+        .hero-btn-outline {
+            background-color: transparent;
+            color: black;
+        }
+
+        .hero-btn-dark:hover {
+            background-color: #333333;
+        }
+
+        .hero-btn-outline:hover {
+            background-color: black;
+            color: white;
+        }
+
+        @media (max-width: 800px) {
+            .hero-title {
+                font-size: 50px;
+                padding: 10px 25px;
+            }
+
+            .hero-tagline {
+                font-size: 12px;
+                letter-spacing: 2px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Shared header -->
+    <div class="header">
+        <div class="search-container">
+    <input type="text"
+           class="search"
+           id="productSearch"
+           placeholder="Search products..."
+           oninput="searchProducts()"
+           autocomplete="off">
+
+    <div id="searchDropdown" class="search-dropdown"></div>
+</div>
+
+        <div class="logo">
+            <img src="logo.png" alt="NÒCTA logo" width="50" height="50">
+            NÒCTA
+        </div>
+
+        <div class="right">
+            <a href="#cart" class="cart-icon" aria-label="Shopping cart">🛒</a>
+            <a href="#signup">SIGNUP</a>
+            <a href="#profile" class="profile-icon" aria-label="Profile">👤</a>
+        </div>
+    </div>
+
+    <!-- Shared navigation -->
+    <div class="nav">
+        <a href="#home">HOME</a>
+        <a href="#categories">CATEGORIES</a>
+        <a href="#about">ABOUT-US</a>
+        <a href="#contact">CONTACT-US</a>
+    </div>
+
+    <!-- HOME -->
+    <div class="page active" id="home">
+    <div class="main">
+        <div class="hero">
+            <h1 class="hero-title">NÒCTA</h1>
+            <p class="hero-tagline">SOFT SHADOWS · QUIET STREETWEAR · AUTUMN 2026</p>
+
+            <div class="hero-buttons">
+                <a href="#categories" class="hero-btn hero-btn-dark">SHOP NOW</a>
+                <a href="#about" class="hero-btn hero-btn-outline">OUR STORY</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- SIGN UP -->
+    <div class="page" id="signup">
+        <div class="signup">
+            <h2>Create Account</h2>
+
+            <form id="signupForm">
+                <input type="text"
+                       id="fullName"
+                       placeholder="Full Name"
+                       autocomplete="name"
+                       required>
+
+                <input type="email"
+                       id="email"
+                       placeholder="Email"
+                       autocomplete="email"
+                       required>
+
+                <input type="password"
+                       id="password"
+                       placeholder="Password"
+                       minlength="6"
+                       autocomplete="new-password"
+                       required>
+
+                <button type="submit">SIGN UP</button>
+            </form>
+
+            <p id="signupMessage" role="status"></p>
+
+            <div class="back">
+                <a href="#home">Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- CART -->
+    <div class="page" id="cart">
+        <div class="cart">
+            <h2>SHOPPING CART</h2>
+
+            <div id="cartItems"></div>
+
+            <h3 id="cartTotal">Total: ₱0</h3>
+
+            <button type="button" onclick="checkout()">CHECKOUT</button>
+
+            <div class="back">
+                <a href="#categories">Continue Shopping</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="page" id="profile">
+        <div class="profile">
+            <div class="icon">👤</div>
+            <h2>MY PROFILE</h2>
+
+            <p id="profileName">Name: Not registered</p>
+            <p id="profileEmail">Email: Not registered</p>
+
+            <button type="button" onclick="logout()">LOG OUT</button>
+
+            <div class="back">
+                <a href="#home">Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="page" id="categories">
+        <div class="content">
+            <h1>CATEGORIES</h1>
+            <p>Explore our different clothing collections.</p>
+
+            <div class="categories" id="productList">
+                <div class="category">
+                    <div>
+                        <h3>NÒCTA Classic Shirt</h3>
+                        <p>₱799</p>
+                        <button type="button"
+                                onclick="addToCart('NÒCTA Classic Shirt', 799)">
+                            ADD TO CART
+                        </button>
+                    </div>
+                </div>
+
+                <div class="category">
+                    <div>
+                        <h3>NÒCTA Oversized Shirt</h3>
+                        <p>₱899</p>
+                        <button type="button"
+                                onclick="addToCart('NÒCTA Oversized Shirt', 899)">
+                            ADD TO CART
+                        </button>
+                    </div>
+                </div>
+
+                <div class="category">
+                    <div>
+                        <h3>NÒCTA Jacket</h3>
+                        <p>₱1,299</p>
+                        <button type="button"
+                                onclick="addToCart('NÒCTA Jacket', 1299)">
+                            ADD TO CART
+                        </button>
+                    </div>
+                </div>
+
+                <div class="category">
+                    <div>
+                        <h3>NÒCTA Pants</h3>
+                        <p>₱999</p>
+                        <button type="button"
+                                onclick="addToCart('NÒCTA Pants', 999)">
+                            ADD TO CART
+                        </button>
+                    </div>
+                </div>
+
+                <div class="category">
+                    <div>
+                        <h3>NÒCTA Accessories</h3>
+                        <p>₱299</p>
+                        <button type="button"
+                                onclick="addToCart('NÒCTA Accessories', 299)">
+                            ADD TO CART
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <p id="noProducts" style="display: none;">No products found.</p>
+        </div>
+    </div>
+
+    <!-- ABOUT US -->
+    <div class="page" id="about">
+        <div class="about">
+            <h1>ABOUT NÒCTA</h1>
+
+            <p>
+                NÒCTA is an online clothing store that focuses on providing
+                simple, modern, and stylish clothing for everyday wear. Our goal
+                is to give customers an easy way to explore and purchase clothing
+                through our online store.
+            </p>
+
+            <p>
+                We offer different types of clothing such as shirts, pants,
+                jackets, and accessories. NÒCTA aims to provide products that
+                are comfortable, fashionable, and accessible to our customers.
+            </p>
+
+            <div class="mission">
+                <h2>OUR MISSION</h2>
+                <p>
+                    Our mission is to provide quality clothing while giving
+                    customers a simple and convenient online shopping experience.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTACT US -->
+    <div class="page" id="contact">
+        <div class="contact">
+            <h1>CONTACT US</h1>
+
+            <div class="contact-info">
+                <p><strong>Email:</strong> nocta@gmail.com</p>
+                <p><strong>Phone:</strong> 0912-345-6789</p>
+                <p><strong>Location:</strong> Quezon City</p>
+                <p><strong>Business Hours:</strong> Monday - Saturday, 9:00 AM - 6:00 PM</p>
+            </div>
+
+            <div class="form">
+                <h2>Send Us a Message</h2>
+
+                <form id="contactForm">
+                    <input type="text"
+                           id="contactName"
+                           placeholder="Your Name"
+                           required>
+
+                    <input type="email"
+                           id="contactEmail"
+                           placeholder="Your Email"
+                           required>
+
+                    <textarea id="contactMessage"
+                              placeholder="Your Message"
+                              required></textarea>
+
+                    <button type="submit">SEND MESSAGE</button>
+                </form>
+
+                <p id="contactResult" role="status"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- External JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>
