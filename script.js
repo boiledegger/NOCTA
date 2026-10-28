@@ -136,81 +136,119 @@ function logout() {
     alert("You have logged out.");
 }
 
-
 /* SHOPPING CART */
-
 var cart = JSON.parse(localStorage.getItem("noctaCart")) || [];
 
 function saveCart() {
     localStorage.setItem("noctaCart", JSON.stringify(cart));
 }
 
-function addToCart(name, price) {
-    cart.push({
-        name: name,
-        price: price
+function formatMoney(amount) {
+    return "₱" + amount.toLocaleString("en-PH", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
     });
+}
+
+
+function addToCart(name, price) {
+    alert(name + " added to cart!");
+
+    var existingItem = cart.find(function(item) {
+        return item.name === name;
+    });
+
+    if (existingItem) {
+        existingItem.quantity = (Number(existingItem.quantity) || 1) + 1;
+    } else {
+        cart.push({
+            name: name,
+            price: Number(price),
+            quantity: 1
+        });
+    }
 
     saveCart();
     displayCart();
+}
 
-    alert(name + " added to cart!");
+
+function changeQuantity(index, amount) {
+    cart[index].quantity += amount;
+
+    // Remove the item if its quantity reaches zero
+    if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+    }
+
+    saveCart();
+    displayCart();
 }
 
 function displayCart() {
     var cartItems = document.getElementById("cartItems");
-    var total = 0;
-
     cartItems.innerHTML = "";
 
     cart.forEach(function(item, index) {
-        total = total + item.price;
+        // Support items saved by the older cart code
+        if (!item.quantity || item.quantity < 1) {
+            item.quantity = 1;
+        }
 
         var product = document.createElement("div");
-        product.className = "product";
+        product.className = "product cart-product";
 
         var name = document.createElement("span");
-        name.textContent = item.name + " - ₱" + item.price;
+        name.textContent = item.name + " - " +
+            formatMoney(item.price);
+
+        var quantityControls = document.createElement("div");
+        quantityControls.className = "quantity-controls";
+
+        var decreaseButton = document.createElement("button");
+        decreaseButton.textContent = "−";
+        decreaseButton.type = "button";
+        decreaseButton.setAttribute("aria-label", "Decrease quantity");
+        decreaseButton.onclick = function() {
+            changeQuantity(index, -1);
+        };
+
+        var quantity = document.createElement("span");
+        quantity.textContent = item.quantity;
+
+        var increaseButton = document.createElement("button");
+        increaseButton.textContent = "+";
+        increaseButton.type = "button";
+        increaseButton.setAttribute("aria-label", "Increase quantity");
+        increaseButton.onclick = function() {
+            changeQuantity(index, 1);
+        };
 
         var removeButton = document.createElement("button");
         removeButton.textContent = "REMOVE";
         removeButton.type = "button";
-
         removeButton.onclick = function() {
             cart.splice(index, 1);
             saveCart();
             displayCart();
         };
 
+        quantityControls.appendChild(decreaseButton);
+        quantityControls.appendChild(quantity);
+        quantityControls.appendChild(increaseButton);
+
         product.appendChild(name);
+        product.appendChild(quantityControls);
         product.appendChild(removeButton);
+
         cartItems.appendChild(product);
     });
 
-    document.getElementById("cartTotal").textContent =
-        "Total: ₱" + total.toLocaleString("en-PH");
+    saveCart();
+    updateCart();
 }
 
 displayCart();
-
-
-/* CHECKOUT */
-
-function checkout() {
-    if (cart.length === 0) {
-        alert("Your shopping cart is empty!");
-        return;
-    }
-
-    var total = 0;
-
-    cart.forEach(function(item) {
-        total = total + item.price;
-    });
-
-    alert("Your total is ₱" + total.toLocaleString("en-PH") +
-          ". Checkout feature is for demonstration only.");
-}
 
 
 /* CONTACT FORM */
