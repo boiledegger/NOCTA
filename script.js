@@ -342,10 +342,19 @@ function checkout() {
     receiptItems.appendChild(itemHeading);
 
     cart.forEach(function(item) {
-        var line = document.createElement("p");
-        line.textContent = item.name + " - " + formatMoney(item.price);
-        receiptItems.appendChild(line);
-    });
+    var line = document.createElement("p");
+
+    var quantity = Number(item.quantity) || 1;
+    var itemTotal = Number(item.price) * quantity;
+
+    line.textContent =
+        item.name +
+        " | Price: " + formatMoney(item.price) +
+        " | Quantity: " + quantity +
+        " | Total: " + formatMoney(itemTotal);
+
+    receiptItems.appendChild(line);
+});
 
     var receiptDetails = [
         ["Subtotal", totals.subtotal],
