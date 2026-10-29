@@ -349,7 +349,7 @@ function checkout() {
 
     var receiptDetails = [
         ["Subtotal", totals.subtotal],
-        ["Discount (" + totals.discountRate + "%)", -totals.discountAmount],
+        ["Discount (" + totals.discountPercent + "%)", -totals.discountAmount],
         ["Total Purchase", totals.total],
         ["Payment Method", paymentMethod],
         ["Amount Paid", amountPaid],
