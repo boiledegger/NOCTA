@@ -172,7 +172,6 @@ function addToCart(name, price) {
     displayCart();
 }
 
-
 function changeQuantity(index, amount) {
     cart[index].quantity += amount;
 
@@ -248,8 +247,152 @@ function displayCart() {
     updateCart();
 }
 
+
+function updateCart() {
+    var subtotal = 0;
+
+    // Calculate the price of each item based on its quantity
+    cart.forEach(function(item) {
+        subtotal += Number(item.price) * Number(item.quantity || 1);
+    });
+
+    var discountInput = document.getElementById("discount");
+    var discountPercent = Number(discountInput.value) || 0;
+
+    // Keep the discount between 0% and 100%
+    discountPercent = Math.max(0, Math.min(100, discountPercent));
+
+    var discountAmount = subtotal * (discountPercent / 100);
+    var total = subtotal - discountAmount;
+
+    document.getElementById("cartSubtotal").textContent =
+        "Subtotal: " + formatMoney(subtotal);
+
+    document.getElementById("discountAmount").textContent =
+        "Discount: " + formatMoney(discountAmount);
+
+    document.getElementById("cartTotal").textContent =
+        "Total: " + formatMoney(total);
+
+    return {
+        subtotal: subtotal,
+        discountPercent: discountPercent,
+        discountAmount: discountAmount,
+        total: total
+    };
+}
+
 displayCart();
 
+function checkout() {
+    if (cart.length === 0) {
+        alert("Your shopping cart is empty!");
+        return;
+    }
+
+    var totals = updateCart();
+
+    var paymentMethod =
+        document.getElementById("paymentMethod").value;
+
+    var amountPaidInput = document.getElementById("amountPaid");
+    var amountPaid = Number(amountPaidInput.value);
+
+    var paymentMessage =
+        document.getElementById("paymentMessage");
+
+    // Validate the payment amount.
+    if (
+        amountPaidInput.value.trim() === "" ||
+        !Number.isFinite(amountPaid) ||
+        amountPaid < 0
+    ) {
+        paymentMessage.textContent =
+            "Please enter a valid payment amount.";
+        return;
+    }
+
+    // For cash, the customer must pay the total or more.
+    // For e-wallets, this demo requires the exact amount.
+    if (paymentMethod === "Cash" && amountPaid < totals.total) {
+        paymentMessage.textContent =
+            "Insufficient payment. You need " +
+            formatMoney(totals.total - amountPaid) + " more.";
+        return;
+    }
+
+    if (paymentMethod !== "Cash" && amountPaid < totals.total) {
+        paymentMessage.textContent =
+            "Please enter at least " + formatMoney(totals.total) +
+            " for this payment method.";
+        return;
+    }
+
+    var change = amountPaid - totals.total;
+
+    // Build the receipt.
+    var receiptItems = document.getElementById("receiptItems");
+    var receiptSummary = document.getElementById("receiptSummary");
+
+    receiptItems.innerHTML = "";
+    receiptSummary.innerHTML = "";
+
+    var itemHeading = document.createElement("h3");
+    itemHeading.textContent = "Purchased Items";
+    receiptItems.appendChild(itemHeading);
+
+    cart.forEach(function(item) {
+        var line = document.createElement("p");
+        line.textContent = item.name + " - " + formatMoney(item.price);
+        receiptItems.appendChild(line);
+    });
+
+    var receiptDetails = [
+        ["Subtotal", totals.subtotal],
+        ["Discount (" + totals.discountRate + "%)", -totals.discountAmount],
+        ["Total Purchase", totals.total],
+        ["Payment Method", paymentMethod],
+        ["Amount Paid", amountPaid],
+        ["Change", change]
+    ];
+
+    receiptDetails.forEach(function(detail) {
+        var line = document.createElement("p");
+
+        if (detail[0] === "Payment Method") {
+            line.textContent = detail[0] + ": " + detail[1];
+        } else if (detail[0] === "Discount (" + totals.discountRate + "%)") {
+            line.textContent = detail[0] + ": -" +
+                formatMoney(totals.discountAmount);
+        } else {
+            line.textContent = detail[0] + ": " +
+                formatMoney(detail[1]);
+        }
+
+        receiptSummary.appendChild(line);
+    });
+
+    document.getElementById("receiptDate").textContent =
+        "Date: " + new Date().toLocaleString("en-PH");
+
+    document.getElementById("receipt").style.display = "block";
+
+    paymentMessage.textContent =
+        "Checkout successful! Your receipt is ready.";
+
+    // Clear the cart only after successful checkout.
+    cart = [];
+    saveCart();
+    displayCart();
+
+    amountPaidInput.value = "";
+    document.getElementById("discount").value = 0;
+
+    document.getElementById("receipt").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+}
 
 /* CONTACT FORM */
 
